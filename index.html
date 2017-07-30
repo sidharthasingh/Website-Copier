@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+	<title>WebSite Downloader | 5iD Project</title>
+
+	<style type="text/css">
+		body{
+			background-color: #292c2f;
+		}	
+		form{
+			width: 100%;
+			align-content: center;
+		}
+		
+		.link_input > input[type="text"]
+		{
+			border: 0px;
+			border-radius: 2px;
+			width: 80%;
+			max-width: 500px;
+			font-size: 1.5em;
+			padding: 5px 10px;
+			margin: 10px 5px;
+			color: #222;
+		}
+
+		.link_submit > input[type="submit"]
+		{
+			font-size: 1em;
+			background-color: #ABC;
+			color: #333;
+			padding: 5px 10px;
+			border:0px;
+			border-radius: 2px; 
+		}
+		.download{
+			width: 50%;
+			max-width: 200px;
+			background-color: #FFF;
+			color: #222;
+			border: 0px;
+			border-radius: 2px;
+			margin: 10px 5px;
+			padding: 5px 10px;
+			font-size: 1.5em;
+			display: none;
+		}
+		.download_button{
+			padding: 20px;
+			text-decoration: none;
+		}
+
+		.download:hover{
+			background-color: #222;
+			color:#FFF;
+		}
+		h1{
+			color: #AAA;
+			margin-bottom: 40px;
+			width: 100%;
+			background-color: #212A2e;
+			padding: 25px 0px;
+		}
+
+		hr{
+			margin: 50px 0px;
+			width: 70%;
+		}
+
+		footer{
+			background-color: #CCC;
+			width: 100%;
+			position: fixed;
+			bottom: 0%;
+			margin: auto;
+			padding: 5px 5px;
+			left: 0%
+		}
+		.loader {
+		    border: 16px solid #f3f3f3; /* Light grey*/
+		    border-top: 16px solid #3498db; /* Blue */
+		    border-radius: 50%;
+		    width: 120px;
+		    height: 120px;
+		    animation: spin 2s linear infinite;
+		}
+		.loader_container{
+			width: 100%;
+			position: fixed;
+		    top: 40%;
+		}
+
+		@keyframes spin {
+		    0% { transform: rotate(0deg); }
+		    100% { transform: rotate(360deg); }
+		}
+
+		#loader{
+			display: none;
+		}
+
+	</style>
+	<script type="text/javascript">
+	function call()
+	{
+		document.getElementById("loader").style.display="block";
+		link = document.getElementById("link").value;
+		var xhttp = new XMLHttpRequest();
+		// return false;
+		xhttp.onreadystatechange = function() 
+		{
+			if (this.readyState == 4 && this.status == 200) 
+			{
+				document.getElementById("loader").style.display="";
+				ret = this.responseText;
+				console.log(ret);
+				switch(ret)
+				{
+					case "0":alert("empty input");break;
+					case "2":alert("Unable to create directory");break;
+					case "3":alert("error in creating zip");break;
+					default:
+						document.getElementById("download").style.display="block";
+						document.getElementById("download_button").setAttribute("href",window.location.href+ret);
+				}
+			}
+		};
+		xhttp.open("POST",window.location.href+"start.php?"+link, true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send("url="+link);
+		xhttp.onerror = () => {
+			alert("Some error occured");
+			document.getElementById("loader").style.display="";	
+			document.getElementById("download").style.display="";
+		}
+		document.getElementById("link").value = "";
+		return false;
+	}
+	
+	</script>
+</head>
+<body>
+<center>
+	<h1>Recursive Download Test | :-P</h1>
+</center>
+<div class="loader_container" id="loader">
+	<center><div class="loader"></div></center>
+</div>
+<form>
+	<center>
+		<div class="link_input">
+			<input type="text" id="link" placeholder="www.example.com">
+		</div>
+		<div class="link_submit">
+			<input type="submit" value="DOWN WEB" onClick="return call();">
+		</div>
+		<hr>
+		<div class="download" id="download">
+			<a id="download_button" class="download_button" href="" download="site.zip">Download</a>
+		</div>
+	</center>
+</form>
+	<footer>
+		<center>
+			Sidhartha | No copyright issued | For experimental purpose only
+		</center>
+	</footer>
+</body>
+</html>

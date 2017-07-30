@@ -35,3 +35,10 @@
 		return true;
 	}
 ?>
+
+<?php
+	if(!empty($_GET["file"]) && file_exists($_GET["file"]."/"))
+		var_dump(createZip($_GET['file']));
+	else
+		echo "none";
+?>

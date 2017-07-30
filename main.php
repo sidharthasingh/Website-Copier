@@ -1,5 +1,5 @@
 <?php
-	define("SITE", "localhost:8080");// withpout http protocol
+
 	function download($url)
 	{
 		$curl = curl_init();
@@ -19,6 +19,7 @@
 		*/
 		echo "starting download $url \n\n";
 		$result = curl_exec($curl);
+		var_dump(curl_getinfo($result));
 		if(!$result)
 			echo "error downloading $url \n\n";
 		else
@@ -111,7 +112,7 @@
 			$newArr[] = $link;
 		}
 		$gArr = array();
-		$farr = array();
+		$fArr = array();
 		foreach($newArr as $key)
 		{
 			if(strpos($key,".html")!==false || strpos($key,".php"))
@@ -125,7 +126,7 @@
 	function init()
 	{
 		$down = download(SITE);
-		save("index.html",$down);
+		save(RUN_DIR."/index.html",$down);
 		$href = getHref($down);
 		$src = getSrc($down);
 		$links = cleanName(array_merge($href,$src));
@@ -134,7 +135,7 @@
 		foreach($links[1] as $link)
 		{
 			$file = str_replace("http://".SITE."/","", $link);
-			if(file_exists($file))
+			if(file_exists(RUN_DIR."/".$file))
 			{
 				echo "$file already exists...\n\n";
 				continue;
@@ -144,11 +145,11 @@
 			{
 				$arr = explode("/",$file);
 				unset($arr[count($arr)-1]);
-				$loc = implode("/",$arr);
+				$loc = RUN_DIR."/".implode("/",$arr);
 				if(!file_exists($loc))
 					mkdir($loc,0777,true);
 			}
-			save($file,$res);
+			save(RUN_DIR."/".$file,$res);
 		}
 		foreach($links[0] as $link)
 		{
@@ -157,10 +158,11 @@
 			{
 				$arr = explode("/",$file);
 				unset($arr[count($arr)-1]);
-				$loc = implode("/",$arr);
+				$loc = RUN_DIR."/".implode("/",$arr);
 				if(!file_exists($loc))
 					mkdir($loc,0777,true);
 			}
+			$file = RUN_DIR."/".$file;
 			if(!file_exists($file))
 				shell_exec("wget -O $file $link");
 			else
@@ -168,5 +170,4 @@
 		}
 	}
 
-	init();
 ?>
